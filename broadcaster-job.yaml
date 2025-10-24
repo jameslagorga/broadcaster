@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: twitch-broadcaster
+spec:
+  template:
+    spec:
+      nodeSelector:
+        node-pool-type: streaming-pool
+      containers:
+      - name: broadcaster
+        image: gcr.io/lagorgeous-helping-hands/broadcaster:latest
+        env:
+        - name: TWITCH_STREAM_KEY
+          valueFrom:
+            secretKeyRef:
+              name: twitch-stream-key
+              key: key
+        - name: STREAM_NAME
+          value: "petewang_xyz"
+        - name: VIDEO_DIRECTORY
+          value: "/mnt/nfs/jobs/download-buildai-dataset/"
+        - name: POD_NAME
+          valueFrom:
+            fieldRef:
+              fieldPath: metadata.name
+        command:
+        - /bin/sh
+        - -c
+        - "mkdir -p /mnt/nfs/jobs/broadcaster && /usr/local/bin/broadcast.sh 2>&1 | tee /mnt/nfs/jobs/broadcaster/${POD_NAME}.log"
+        resources:
+          requests:
+            cpu: "0.5"
+            memory: "1Gi"
+        volumeMounts:
+        - name: nfs-storage
+          mountPath: /mnt/nfs
+      restartPolicy: Never
+      volumes:
+      - name: nfs-storage
+        persistentVolumeClaim:
+          claimName: filestore-pvc
+  backoffLimit: 4
