@@ -7,7 +7,7 @@ RUN_CHART := broadcaster-job.yaml
 all: build push run
 
 build:
-	docker build -t $(IMAGE_NAME) -f $(DOCKERFILE) .
+	docker build --platform linux/amd64 -t $(IMAGE_NAME) -f $(DOCKERFILE) .
 
 push:
 	docker push $(IMAGE_NAME)
