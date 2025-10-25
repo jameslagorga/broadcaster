@@ -12,7 +12,7 @@ build:
 push:
 	docker push $(IMAGE_NAME)
 
-run:
+apply:
 	kubectl apply -f  $(RUN_CHART)
 
 delete:
