@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: twitch-broadcaster
+  name: twitch-broadcaster-STREAM_NAME
 spec:
   template:
     spec:
@@ -14,10 +14,10 @@ spec:
         - name: TWITCH_STREAM_KEY
           valueFrom:
             secretKeyRef:
-              name: twitch-stream-key-dexerityro
+              name: twitch-stream-key-STREAM_NAME
               key: key
         - name: STREAM_NAME
-          value: "dexerityro"
+          value: "STREAM_NAME"
         - name: VIDEO_DIRECTORY
           value: "/mnt/nfs/jobs/download-buildai-dataset/data/factories/factory_004/workers/worker_026/videos/"
         - name: POD_NAME
