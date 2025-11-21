@@ -14,6 +14,10 @@ RTMP_IP="34.168.74.11"
 # The base URL for the RTMP server
 RTMP_URL="rtmp://${RTMP_IP}:1935/live"
 
+# Set a stream name (e.g., 'main-event', 'side-stage').
+# This will be used in the GCS bucket path: gs://multi-camera-streams/<STREAM_NAME>/camera-#/
+STREAM_NAME="dexterityro"
+
 # --- PRE-FLIGHT CLEANUP ---
 echo "--- Ensuring a clean start ---"
 echo "Terminating any existing ffmpeg processes..."
@@ -44,7 +48,7 @@ PID_FILE="pids.txt"
 
 # Loop through the camera indices and start a streaming process for each
 for index in "${CAMERA_INDICES[@]}"; do
-  STREAM_KEY="cam${index}"
+  STREAM_KEY="${STREAM_NAME}_camera-${index}"
   echo "Starting stream for camera ${index} with stream key ${STREAM_KEY} (1080p -> 720p, CRF 28)"
   
   # Start ffmpeg in the background using nohup to ensure it keeps running
